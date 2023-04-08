@@ -1,0 +1,42 @@
+name: kernel_build
+on:
+  push:
+    branches: main
+  pull_request:
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        defconfig: [allnoconfig]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Download and extract latest kernel
+        run: |
+              wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$(curl -s https://www.kernel.org | grep -Po '(?<=latest_link">linux-)[^<]+').tar.xz tar xf linux-*.tar.xz --strip-components=1
+
+      - name: Install Dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y gcc make build-essential libncurses-dev bison flex libssl-dev
+
+      #- name: Cache ccache
+      #  uses: actions/cache@v2
+      #  with:
+      #    path: ~/.ccache
+      #    key: ${{ matrix.defconfig }}
+
+      - name: Build Kernel
+        run: |
+          make ${{ matrix.defconfig }}
+          make -j$(nproc)
+
+      - name: Upload Kernel Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Kernel Image
+          path: arch/*/boot/zImage
