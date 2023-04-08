@@ -14,15 +14,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Download and extract latest kernel
-        run: |
-              wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$(curl -s https://www.kernel.org | grep -Po '(?<=latest_link">linux-)[^<]+').tar.xz tar xf linux-*.tar.xz --strip-components=1
-
+        
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y gcc make build-essential libncurses-dev bison flex libssl-dev
+          sudo apt install -y gcc make build-essential libncurses-dev wget curl tar bison flex libssl-dev
+          
+      - name: Download and extract latest kernel
+        run: |
+              wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$(curl -s https://www.kernel.org | grep -Po '(?<=latest_link">linux-)[^<]+').tar.xz tar xf linux-*.tar.xz --strip-components=1
 
       #- name: Cache ccache
       #  uses: actions/cache@v2
