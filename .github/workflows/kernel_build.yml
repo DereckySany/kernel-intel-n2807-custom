@@ -22,7 +22,14 @@ jobs:
           
       - name: Download and extract latest kernel
         run: |
-              wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$(curl -s https://www.kernel.org/finger_banner | grep -m1 "$1" | sed -r 's/^.+: +([^ ]+)( .+)?$/\1/').tar.xz tar xf linux-*.tar.xz --strip-components=1
+            latest_version=$(curl -s https://www.kernel.org/finger_banner | grep -m1 "$1" | sed -r 's/^.+: +([^ ]+)( .+)?$/\1/')
+            if [ ! -f linux-${latest_version}.tar.xz ];then
+            wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${latest_version}.tar.xz
+            fi
+            if [ ! -d linux-${latest_version} ];then
+            tar -xvf linux-${latest_version}.tar.xz
+            fi
+            cd linux-${latest_version}
 
       #- name: Cache ccache
       #  uses: actions/cache@v2
@@ -32,8 +39,13 @@ jobs:
 
       - name: Build Kernel
         run: |
-          make ${{ matrix.defconfig }}
-          make -j$(nproc)
+            export CFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
+            export CXXFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
+            # Build only minimal debug info to reduce size
+            CFLAGS+=' -g1'
+            CXXFLAGS+=' -g1'
+            make ${{ matrix.defconfig }}
+            make -j$(nproc)
 
       - name: Upload Kernel Artifacts
         uses: actions/upload-artifact@v2
