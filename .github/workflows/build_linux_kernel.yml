@@ -52,8 +52,8 @@ jobs:
             make ${{ matrix.defconfig }}
             make -j$(nproc)
     
-      - name: Upload Kernel Artifacts
+      - name: Upload Kernel Linux Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Kernel Image
-          path: arch/*/boot/zImage
+          name: Kernel Linux Image
+          path: arch/x86/boot/bzImage
