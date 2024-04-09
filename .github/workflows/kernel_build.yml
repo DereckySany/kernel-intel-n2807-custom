@@ -10,15 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        defconfig: [allnoconfig]
+        defconfig: [allnoconfig,allnoconfig]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y gcc make build-essential libncurses-dev wget curl tar bison flex libssl-dev
+          sudo apt install -y gcc make build-essential libncurses-dev wget curl tar bison flex libssl-dev grep sed
           
       - name: Download and extract latest kernel
         run: |
