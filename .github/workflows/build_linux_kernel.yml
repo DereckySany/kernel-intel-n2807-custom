@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        defconfig: [allnoconfig,x86_64_defconfig]
+        defconfig: [defconfig,localmodconfig]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
