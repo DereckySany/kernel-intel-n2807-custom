@@ -56,4 +56,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: Kernel Linux Image
-          path: arch/x86/boot/bzImage
+          path: linux-${{ env.LATEST_VERSION }}/arch/x86/boot/bzImage
