@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        defconfig: [allnoconfig,allnoconfig]
+        defconfig: [allnoconfig,x86_64_defconfig]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,16 +21,18 @@ jobs:
           sudo apt install -y gcc make build-essential libncurses-dev wget curl tar bison flex libssl-dev grep sed
           
       - name: Download and extract latest kernel
+        id: download_kernel
         run: |
-            latest_version=$(curl -s https://www.kernel.org/finger_banner | grep -m1 "$1" | sed -r 's/^.+: +([^ ]+)( .+)?$/\1/')
-            if [ ! -f linux-${latest_version}.tar.xz ];then
+          latest_version=$(curl -s https://www.kernel.org/finger_banner | grep -m1 "$1" | sed -r 's/^.+: +([^ ]+)( .+)?$/\1/')
+          if [ ! -f linux-${latest_version}.tar.xz ];then
             wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${latest_version}.tar.xz
-            fi
-            if [ ! -d linux-${latest_version} ];then
+          fi
+          if [ ! -d linux-${latest_version} ];then
             tar -xvf linux-${latest_version}.tar.xz
-            fi
-            echo done! linux-${latest_version}
-
+          fi
+          echo "LATEST_VERSION=${latest_version}" >> $GITHUB_ENV
+          echo done! linux-${{ env.LATEST_VERSION }}
+          
       #- name: Cache ccache
       #  uses: actions/cache@v2
       #  with:
@@ -45,10 +47,10 @@ jobs:
             CFLAGS+=' -g1'
             CXXFLAGS+=' -g1'
             ls
-            cd linux-${latest_version}
+            cd linux-${{ env.LATEST_VERSION }}
             make ${{ matrix.defconfig }}
             make -j$(nproc)
-
+    
       - name: Upload Kernel Artifacts
         uses: actions/upload-artifact@v2
         with:
