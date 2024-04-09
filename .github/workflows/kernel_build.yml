@@ -29,7 +29,7 @@ jobs:
             if [ ! -d linux-${latest_version} ];then
             tar -xvf linux-${latest_version}.tar.xz
             fi
-            cd linux-${latest_version}
+            echo done! linux-${latest_version}
 
       #- name: Cache ccache
       #  uses: actions/cache@v2
@@ -45,6 +45,7 @@ jobs:
             CFLAGS+=' -g1'
             CXXFLAGS+=' -g1'
             ls
+            cd linux-${latest_version}
             make ${{ matrix.defconfig }}
             make -j$(nproc)
 
