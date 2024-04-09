@@ -1,4 +1,4 @@
-name: kernel_build
+name: Compiler Linux Kernel
 on:
   push:
     branches: main
@@ -37,13 +37,14 @@ jobs:
       #    path: ~/.ccache
       #    key: ${{ matrix.defconfig }}
 
-      - name: Build Kernel
+      - name: Building Kernel
         run: |
             export CFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
             export CXXFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
             # Build only minimal debug info to reduce size
             CFLAGS+=' -g1'
             CXXFLAGS+=' -g1'
+            ls
             make ${{ matrix.defconfig }}
             make -j$(nproc)
 
