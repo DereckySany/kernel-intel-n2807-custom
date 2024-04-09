@@ -32,7 +32,7 @@ jobs:
             tar -xvf linux-${latest_version}.tar.xz
           fi
           echo "LATEST_VERSION=${latest_version}" >> $GITHUB_ENV
-          echo done! linux-${{ env.LATEST_VERSION }}
+          echo done! linux-${latest_version}
           
       #- name: Cache ccache
       #  uses: actions/cache@v2
@@ -47,6 +47,7 @@ jobs:
             
       - name: Building Kernel
         run: |
+            echo linux-${{ env.LATEST_VERSION }}
             ls
             cd linux-${{ env.LATEST_VERSION }}
             make ${{ matrix.defconfig }}
