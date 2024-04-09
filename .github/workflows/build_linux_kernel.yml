@@ -18,7 +18,8 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt update
-          sudo apt install -y gcc make build-essential libncurses-dev wget curl tar bison flex libssl-dev grep sed
+          sudo apt install -y gcc make build-essential libncurses-dev wget curl tar bison flex libssl-dev grep sed libelf1
+          sudo apt upgrade
           
       - name: Download and extract latest kernel
         id: download_kernel
@@ -38,14 +39,14 @@ jobs:
       #  with:
       #    path: ~/.ccache
       #    key: ${{ matrix.defconfig }}
-
+            # export CFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
+            # export CXXFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
+            # # Build only minimal debug info to reduce size
+            # CFLAGS+=' -g1'
+            # CXXFLAGS+=' -g1'
+            
       - name: Building Kernel
         run: |
-            export CFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
-            export CXXFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
-            # Build only minimal debug info to reduce size
-            CFLAGS+=' -g1'
-            CXXFLAGS+=' -g1'
             ls
             cd linux-${{ env.LATEST_VERSION }}
             make ${{ matrix.defconfig }}
