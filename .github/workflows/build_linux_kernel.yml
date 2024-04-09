@@ -38,17 +38,18 @@ jobs:
       #  with:
       #    path: ~/.ccache
       #    key: ${{ matrix.defconfig }}
-            # export CFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
-            # export CXXFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
-            # # Build only minimal debug info to reduce size
-            # CFLAGS+=' -g1'
-            # CXXFLAGS+=' -g1'
+
             
       - name: Building Kernel
         run: |
             echo linux-${{ env.LATEST_VERSION }}
             ls
             cd linux-${{ env.LATEST_VERSION }}
+            export CFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
+            export CXXFLAGS="-march=silvermont -mtune=silvermont -m3dnow -m3dnowa -mfpmath=sse -Os"
+            # Build only minimal debug info to reduce size
+            CFLAGS+=' -g1'
+            CXXFLAGS+=' -g1'
             make ${{ matrix.defconfig }}
             make -j$(nproc)
     
