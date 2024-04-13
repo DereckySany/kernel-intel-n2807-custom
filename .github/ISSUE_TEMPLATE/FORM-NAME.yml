@@ -33,16 +33,16 @@ body:
       label: generation processor
       description: What generation of our processor are you running?
       options:
-        Sandy Bridge
-        Ivy Bridge
-        Haswell
-        Broadwell
-        Skylake
-        Kaby Lake
-        Coffee Lake
-        Cannon Lake
-        Ice Lake
-        Tiger Lake
+        - Sandy Bridge
+        - Ivy Bridge
+        - Haswell
+        - Broadwell
+        - Skylake
+        - Kaby Lake
+        - Coffee Lake
+        - Cannon Lake
+        - Ice Lake
+        - Tiger Lake
       default: 0
     validations:
       required: true
