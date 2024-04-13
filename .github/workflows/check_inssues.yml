@@ -10,6 +10,7 @@ jobs:
     
     steps:
     - name: Check if issue contains valid values
+      id: check-values
       uses: actions/github-script@v5
       with:
         github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -28,8 +29,14 @@ jobs:
             console.log(`Valid values found. NAME=${NAME}, HOST=${HOST}, CC=${CC}, MODEL=${MODEL}, CODENAME=${CODENAME}`);
           } else {
             console.log('Invalid values in the issue.');
+            const issueNumber = process.env.GITHUB_EVENT.issue.number;
+            const repo = process.env.GITHUB_REPOSITORY;
+            const errorMessage = 'Os valores na issue não seguem o padrão especificado. Por favor, corrija e reabra a issue.';
+            await github.issues.createComment({ issue_number: issueNumber, owner: repo.split('/')[0], repo: repo.split('/')[1], body: errorMessage });
+            await github.issues.update({ issue_number: issueNumber, owner: repo.split('/')[0], repo: repo.split('/')[1], state: 'closed' });
             process.exit(1);
           }
 
     - name: Set environment variables
+      if: steps.check-values.outcome == 'success'
       run: echo "NAME=${{ env.NAME }}" >> $GITHUB_ENV && echo "HOST=${{ env.HOST }}" >> $GITHUB_ENV && echo "CC=${{ env.CC }}" >> $GITHUB_ENV && echo "MODEL=${{ env.MODEL }}" >> $GITHUB_ENV && echo "CODENAME=${{ env.CODENAME }}" >> $GITHUB_ENV
