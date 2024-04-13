@@ -1,7 +1,7 @@
 name: Kernel builder request
 description: kernel File config report.
 title: "[Request]: "
-labels: ["bug", "triage"]
+labels: ["question", "triage"]
 projects: ["octo-org/1", "octo-org/44"]
 assignees:
   - octocat
