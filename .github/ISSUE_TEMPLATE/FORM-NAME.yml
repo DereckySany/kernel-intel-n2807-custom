@@ -44,7 +44,6 @@ body:
         - Ice Lake
         - Tiger Lake
       default: 0
-    validations:
       required: true
   - type: dropdown
     id: threads
