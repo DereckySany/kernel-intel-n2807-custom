@@ -24,7 +24,7 @@ body:
       label: Customizing kernel variables 
       description: Replace the values ​​with your information Config
       placeholder: Tell us what you see!
-      value: "NAME=Heline\nHOST=machine\nCC=-g0\nMODEL=N2807\nCODENAME=Celeron!"
+      value: "NAME=Heline\nHOST=machine\nCC=-g0\nMODEL=N2807\nCODENAME=Celeron"
     validations:
       required: true
   - type: dropdown
