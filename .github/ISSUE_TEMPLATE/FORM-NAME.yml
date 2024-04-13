@@ -55,8 +55,7 @@ body:
         - 2/4 threads
         - 8/16 threads
         - 32/64 threads
-      validations:
-        required: true
+      required: true
   - type: textarea
     id: logs
     attributes:
