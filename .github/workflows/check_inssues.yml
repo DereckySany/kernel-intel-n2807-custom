@@ -1,0 +1,35 @@
+name: Check Issue
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  check-issue:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Check if issue contains valid values
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const fs = require('fs');
+          const issueBody = fs.readFileSync(process.env.GITHUB_EVENT_PATH, 'utf8');
+          const regex = /NAME=(\w+)\nHOST=(\w+)\nCC=(-\w+)\nMODEL=(\w+)\nCODENAME=(\w+)/;
+          const matches = issueBody.match(regex);
+          if (matches) {
+            const [, NAME, HOST, CC, MODEL, CODENAME] = matches;
+            process.env.NAME = NAME;
+            process.env.HOST = HOST;
+            process.env.CC = CC;
+            process.env.MODEL = MODEL;
+            process.env.CODENAME = CODENAME;
+            console.log(`Valid values found. NAME=${NAME}, HOST=${HOST}, CC=${CC}, MODEL=${MODEL}, CODENAME=${CODENAME}`);
+          } else {
+            console.log('Invalid values in the issue.');
+            process.exit(1);
+          }
+
+    - name: Set environment variables
+      run: echo "NAME=${{ env.NAME }}" >> $GITHUB_ENV && echo "HOST=${{ env.HOST }}" >> $GITHUB_ENV && echo "CC=${{ env.CC }}" >> $GITHUB_ENV && echo "MODEL=${{ env.MODEL }}" >> $GITHUB_ENV && echo "CODENAME=${{ env.CODENAME }}" >> $GITHUB_ENV
