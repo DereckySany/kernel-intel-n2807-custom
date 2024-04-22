@@ -46,7 +46,7 @@ jobs:
             latest_version=${{ github.event.inputs.KERNEL_VERSION }}
           fi
           if [ ! -f linux-${latest_version}.tar.xz ];then
-            wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${latest_version}.tar.xz
+            wget https://cdn.kernel.org/pub/linux/kernel/v${latest_version:0:1}.x/linux-${latest_version}.tar.xz
           fi
           if [ ! -d linux-${latest_version} ];then
             tar -xvf linux-${latest_version}.tar.xz
