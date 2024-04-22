@@ -82,7 +82,7 @@ jobs:
             make -j$(nproc)
     
       - name: Upload Kernel ${{ github.event.inputs.KERNEL_VERSION }} Linux Artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4.3.2
         with:
           name: Kernel Linux ${{ github.event.inputs.KERNEL_VERSION }} Image
           path: linux-${{ env.LATEST_VERSION }}/arch/x86/boot/bzImage
