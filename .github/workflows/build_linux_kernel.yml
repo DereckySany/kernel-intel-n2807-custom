@@ -1,8 +1,5 @@
 name: Compiler Linux Kernel
 on:
-  push:
-    branches: main
-  pull_request:
   workflow_dispatch:
     inputs:
       KERNEL_VERSION:
