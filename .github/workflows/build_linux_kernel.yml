@@ -4,6 +4,23 @@ on:
     branches: main
   pull_request:
   workflow_dispatch:
+    inputs:
+      KERNEL_VERSION:
+        required: true
+        description: "CHOSE OUR KERNEL VERSION:"
+        type: choice
+        default: latest
+        options:
+          - latest
+          - 6.9-rc5
+          - 6.8.7
+          - 6.7.12
+          - 6.6.28
+          - 6.1.87
+          - 5.15.156
+          - 5.10.215
+          - 5.4.274
+          - 4.19.312
     
 jobs:
   build:
@@ -23,7 +40,11 @@ jobs:
       - name: Download and extract latest kernel
         id: download_kernel
         run: |
-          latest_version=$(curl -s https://www.kernel.org/finger_banner | grep -m1 "$1" | sed -r 's/^.+: +([^ ]+)( .+)?$/\1/')
+          if [ ${{ github.event.inputs.KERNEL_VERSION }} == "latest" ];then
+            latest_version=$(curl -s https://www.kernel.org/finger_banner | grep -m1 "$1" | sed -r 's/^.+: +([^ ]+)( .+)?$/\1/')
+          else
+            latest_version=${{ github.event.inputs.KERNEL_VERSION }}
+          fi
           if [ ! -f linux-${latest_version}.tar.xz ];then
             wget https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-${latest_version}.tar.xz
           fi
