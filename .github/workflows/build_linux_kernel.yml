@@ -52,20 +52,31 @@ jobs:
           else
             latest_version=${{ github.event.inputs.KERNEL_VERSION }}
           fi
-          if [ ! -f linux-${latest_version}.tar.xz ];then
-            wget https://cdn.kernel.org/pub/linux/kernel/v${latest_version:0:1}.x/linux-${latest_version}.tar.xz
+          
+          if [[ $latest_version == *"-rc"* ]]; then
+            file_extension=".tar.gz"
+            download_url="https://git.kernel.org/torvalds/t/linux-${latest_version}${file_extension}"
+          else
+            file_extension=".tar.xz"
+            download_url="https://cdn.kernel.org/pub/linux/kernel/v${latest_version:0:1}.x/linux-${latest_version}${file_extension}"
           fi
+          
+          if [ ! -f linux-${latest_version}${file_extension} ];then
+            wget ${download_url}
+          fi
+          
           if [ ! -d linux-${latest_version} ];then
-            tar -xvf linux-${latest_version}.tar.xz
+            tar -xvf linux-${latest_version}${file_extension}
           fi
+          
           echo "LATEST_VERSION=${latest_version}" >> $GITHUB_ENV
           echo done! linux-${latest_version}
           
-      #- name: Cache ccache
-      #  uses: actions/cache@v2
-      #  with:
-      #    path: ~/.ccache
-      #    key: ${{ matrix.defconfig }}
+        #- name: Cache ccache
+        #  uses: actions/cache@v2
+        #  with:
+        #    path: ~/.ccache
+        #    key: ${{ matrix.defconfig }}
 
             
       - name: Building Kernel ${{ github.event.inputs.KERNEL_VERSION }}
