@@ -68,7 +68,7 @@ jobs:
       #    key: ${{ matrix.defconfig }}
 
             
-      - name: Building Kernel ${{ env.LATEST_VERSION }}
+      - name: Building Kernel ${{ github.event.inputs.KERNEL_VERSION }}
         run: |
             echo linux-${{ env.LATEST_VERSION }}
             ls
@@ -81,8 +81,8 @@ jobs:
             make ${{ matrix.defconfig }}
             make -j$(nproc)
     
-      - name: Upload Kernel ${{ env.LATEST_VERSION }} Linux Artifacts
+      - name: Upload Kernel ${{ github.event.inputs.KERNEL_VERSION }} Linux Artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: Kernel Linux ${{ env.LATEST_VERSION }} Image
+          name: Kernel Linux ${{ github.event.inputs.KERNEL_VERSION }} Image
           path: linux-${{ env.LATEST_VERSION }}/arch/x86/boot/bzImage
